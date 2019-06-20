@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.post.admin.postadmin.dao.UserDao">
+    <!--    public Employee getEmpById(Integer id);
+
+     public void insertEmp(Employee employee);-->
+    <select id="queryUsernameAndpwd" resultType="com.post.admin.postadmin.domain.User">
+       select username,pwd password from t_user where username=#{username} and pwd=#{password}
+    </select>
+
+
+    <insert id="addDept"  parameterType="com.post.admin.postadmin.domain.Dept">
+
+       insert  into  t_dept values (#{deptid},#{dname},#{dPhone},#{dmark})
+
+    </insert>
+    <select id="queryDeptAll" resultType="com.post.admin.postadmin.domain.Dept">
+      select id deptid,d_name dname ,d_phone dPhone ,d_mark dmark from  t_dept
+    </select>
+
+
+    <select id="queryDeptWhere"  parameterType="com.post.admin.postadmin.domain.Dept" resultType="com.post.admin.postadmin.domain.Dept">
+     select id deptid,d_name dname ,d_phone dPhone ,d_mark dmark from  t_dept
+
+    </select>
+
+    <delete id="delDept" parameterType="String">
+      delete  from  t_dept  where   id=#{id}
+
+    </delete>
+
+    <update id="updateDept" parameterType="com.post.admin.postadmin.domain.Dept">
+          update  t_dept  set d_name=#{dname},d_phone=#{dPhone},d_mark=#{dmark}  where  id=#{deptid}
+    </update>
+
+    <select id="queryPageDeptList"  resultType="com.post.admin.postadmin.domain.Dept">
+
+      select  id deptid,d_name dname ,d_phone dPhone ,d_mark dmark from  t_dept
+
+
+      <where>
+         <if test="param1.dname!=null and param1.dname!=''">
+             d_name=#{param1.dname}
+
+         </if>
+
+          <if test="param1.dPhone!=null and param1.dPhone!=''">
+              d_phone =#{param1.dPhone}
+
+          </if>
+
+
+      </where>
+
+      limit #{param2} ,#{param3}
+
+    </select>
+
+    <select id="empQueryAll" resultType="com.post.admin.postadmin.domain.Emp">
+
+
+      select * from  t_emp
+
+    </select>
+
+
+
+    <select id="queryEmpWhere" parameterType="com.post.admin.postadmin.domain.Emp" resultType="com.post.admin.postadmin.domain.Emp">
+
+
+      select * from  t_emp
+
+    </select>
+
+    <select id="queryPageEmpList" parameterType="com.post.admin.postadmin.domain.Emp" resultType="com.post.admin.postadmin.domain.Emp">
+
+
+        SELECT *,d.d_name dname FROM `t_emp` e left join t_dept d ON
+        e.deptid=d.id
+
+        <where>
+            <if test="param1.empName!=null and param1.empName!=''">
+                empname=#{param1.empName}
+
+            </if>
+
+            <if test="param1.empPhone!=null and param1.empPhone!=''">
+                empPhone =#{param1.empPhone}
+
+            </if>
+            <if test="param1.position!=null and param1.position!=''">
+                position =#{param1.position}
+
+            </if>
+            <if test="param1.deptid!=null and param1.deptid!=''">
+                deptid =#{param1.deptid}
+
+            </if>
+
+
+        </where>
+
+        limit #{param2} ,#{param3}
+    </select>
+
+    <delete id="delEmp" parameterType="String">
+        delete   from   t_emp  where  empid=#{id}
+
+    </delete>
+
+    <insert id="addEmp" parameterType="com.post.admin.postadmin.domain.Emp">
+
+        insert   into   t_emp values(#{empid},#{empName},#{empPhone},#{borth},#{position},#{deptid})
+
+    </insert>
+
+    <update id="updateEmp"  parameterType="com.post.admin.postadmin.domain.Emp">
+
+       update
+       t_emp
+       set
+           empname=#{empName},
+           empphone=#{empPhone},
+           borth=#{borth},
+           position=#{position},
+           deptid=#{deptid}
+      where empid=#{empid}
+
+
+    </update>
+
+
+    <select id="workAll"  parameterType="com.post.admin.postadmin.domain.Work" resultType="com.post.admin.postadmin.domain.Work">
+
+        SELECT * FROM t_work w left join t_emp t
+
+        on w.empid=t.empid;
+    </select>
+
+    <select id="queryWorkWhere"  parameterType="com.post.admin.postadmin.domain.Work" resultType="com.post.admin.postadmin.domain.Work">
+       SELECT * FROM t_work w left join t_emp t
+
+        on w.empid=t.empid;
+
+    </select>
+
+    <select id="queryPageWorkList"  parameterType="com.post.admin.postadmin.domain.Work" resultType="com.post.admin.postadmin.domain.Work">
+
+        SELECT * FROM t_work w left join t_emp t
+
+        on w.empid=t.empid
+        <where>
+            <if test="param1.empname!=null and param1.empname!=''">
+                empname=#{param1.empname}
+
+            </if>
+
+        </where>
+
+        limit #{param2} ,#{param3}
+
+    </select>
+
+
+    <delete id="delWork" parameterType="String">
+        delete   from  t_work where  workid=#{id}
+
+    </delete>
+
+
+</mapper>

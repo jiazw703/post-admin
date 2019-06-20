@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<title>部门管理</title>
+
+
+
+		<!-- basic styles -->
+
+		<link href="../static/assets/css/bootstrap.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../static/assets/css/font-awesome.min.css" />
+
+		<!--[if IE 7]>
+        <link rel="stylesheet" href="../static/assets/css/font-awesome-ie7.min.css"/>
+        <![endif]-->
+
+		<!-- page specific plugin styles -->
+
+		<link rel="stylesheet" href="../static/assets/css/jquery-ui-1.10.3.full.min.css" />
+		<link rel="stylesheet" href="../static/assets/css/datepicker.css" />
+		<link rel="stylesheet" href="../static/assets/css/ui.jqgrid.css" />
+
+		<!-- fonts -->
+
+
+		<!-- ace styles -->
+
+		<link rel="stylesheet" href="../static/assets/css/ace.min.css" />
+		<link rel="stylesheet" href="../static/assets/css/ace-rtl.min.css" />
+		<link rel="stylesheet" href="../static/assets/css/ace-skins.min.css" />
+
+		<!--[if lte IE 8]>
+        <link rel="stylesheet" href="../static/assets/css/ace-ie.min.css"/>
+        <![endif]-->
+
+		<!-- inline styles related to this page -->
+
+		<!-- ace settings handler -->
+
+		<script src="../static/assets/js/ace-extra.min.js"></script>
+
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+
+		<!--[if lt IE 9]>
+        <script src="../static/assets/js/html5shiv.js"></script>
+        <script src="../static/assets/js/respond.min.js"></script>
+        <![endif]-->
+	</head>
+
+	<style>
+		#body {
+
+			margin: 35px auto;
+			padding: 10px;
+			width: 895px;
+			height: 100%;
+		}
+		.fieldsets{
+			padding:12px;
+		}
+
+	</style>
+	<body>
+
+
+	<div  th:include="top.html"></div>
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+				<a class="menu-toggler" id="menu-toggler" href="#">
+					<span class="menu-text"></span>
+				</a>
+
+
+
+				<div th:include="leftMenu.html"></div>
+				<div class="main-content">
+					<div class="breadcrumbs" id="breadcrumbs">
+						<script type="text/javascript">
+							try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+						</script>
+
+						<ul class="breadcrumb">
+							<li>
+								<i class="icon-home home-icon"></i>
+								<a href="#">部门管理</a>
+							</li>
+
+							<li>
+								<a href="#">部门列表</a>
+							</li>
+
+						</ul><!-- .breadcrumb -->
+
+
+					</div>
+
+					<div class="page-content">
+						<div class="page-header">
+							<h1>
+								部门管理
+								<small>
+									<i class="icon-double-angle-right"></i>
+								 部门列表
+								</small>
+							</h1>
+						</div><!-- /.page-header -->
+
+						<div class="row">
+							<div class="col-xs-12">
+
+								<div
+										style="background-color: #f8fafc; border: 1px solid #e0e2e5; padding: 15px; margin-bottom: 20px;">
+									<div class="row searchspan">
+
+
+
+										<div class="col-md-2 col-xs-6">
+											<div class="input-group">
+												<input type="text" name="companyName"
+													   class="form-control search-query" id="dname2" placeholder="部门名称">
+											</div>
+										</div>
+
+										<div class="col-md-2 col-xs-6">
+											<div class="input-group">
+												<input type="text" name="companyCode"
+													   class="form-control search-query" id="dPhone2" placeholder="部门电话">
+												<span class="input-group-btn"></span>
+											</div>
+										</div>
+
+
+
+
+										<div class="col-md-1  col-xs-6">
+											<button type="button" class="btn btn-primary btn-sm"
+													id="btnSearch">
+												查询 <i class="icon-search icon-on-right bigger-110" id="search"></i>
+											</button>
+										</div>
+
+									</div>
+								</div>
+								<div>
+
+									<button type="button" class="btn btn-success btn-sm" id="add">添加</button>
+									<button type="button" class="btn btn-info btn-sm" id="edit">修改</button>
+									<button type="button" class="btn btn-danger btn-sm" id="del">删除</button>
+
+
+								</div>
+								<table id="grid-table"></table>
+
+								<div id="grid-pager"></div>
+
+								<script type="text/javascript">
+									var $path_base = "/";//this will be used in gritter alerts containing images
+								</script>
+
+								<!-- PAGE CONTENT ENDS -->
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+
+
+              <!--模态框-->
+				<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+					 aria-labelledby="myModalLabel">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+
+
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal"
+										aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+								<h4 class="modal-title" id="myModalLabel">添加部门</h4>
+							</div>
+
+
+							<div class="modal-body">
+								<div class="widget-box">
+									<div id="body">
+									<fieldset  class="fieldsets">
+
+										<div class="form-group">
+											<label class="col-sm-2 control-label" >部门名称:</label>
+											<div class="col-sm-4">
+												<input class="form-control" type="text" id="dname1" name="dname" />
+											</div>
+
+										</div>
+									</fieldset>
+
+									<fieldset  class="fieldsets">
+
+										<div class="form-group">
+											<label class="col-sm-2 control-label" >部门电话:</label>
+											<div class="col-sm-4">
+												<input class="form-control" type="text" id="dPhone1" name="dPhone"  />
+											</div>
+
+										</div>
+									</fieldset>
+
+									<fieldset  class="fieldsets">
+
+										<div class="form-group">
+											<label class="col-sm-2 control-label" >备注:</label>
+											<div class="col-sm-4">
+												<input class="form-control" type="text"  id="mark1" name="mark"  />
+											</div>
+
+										</div>
+									</fieldset>
+									</div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+								<button type="button" class="btn btn-primary saveInterface" id="save">保存</button>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="modal fade" id="editMode" tabindex="-1" role="dialog"
+					 aria-labelledby="myModalLabel">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+
+
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal"
+										aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+								<h4 class="modal-title" id="myModalLabel1">修改部门</h4>
+							</div>
+
+							<div class="modal-body">
+								<div class="widget-box">
+									<div id="body">
+										<fieldset  class="fieldsets">
+
+											<div class="form-group">
+												<label class="col-sm-2 control-label" >部门名称:</label>
+												<div class="col-sm-4">
+													<input class="form-control" type="text" id="dname" name="dname" />
+												</div>
+
+											</div>
+										</fieldset>
+
+										<fieldset  class="fieldsets">
+
+											<div class="form-group">
+												<label class="col-sm-2 control-label" >部门电话:</label>
+												<div class="col-sm-4">
+													<input class="form-control" type="text" id="dPhone" name="dPhone"  />
+												</div>
+
+											</div>
+										</fieldset>
+										<fieldset  class="fieldsets">
+
+											<div class="form-group">
+												<label class="col-sm-2 control-label" >备注:</label>
+												<div class="col-sm-4">
+													<input class="form-control" type="text"  id="mark" name="mark"  />
+												</div>
+
+											</div>
+										</fieldset>
+									</div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+								<button type="button" class="btn btn-primary saveInterface" id="editsave">保存</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div><!-- /.main-container-inner -->
+
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="icon-double-angle-up icon-only bigger-110"></i>
+			</a>
+		</div><!-- /.main-container -->
+
+		<!-- basic scripts -->
+
+		<!--[if !IE]> -->
+
+		<script src="../static/assets/js/jquery-2.0.3.min.js"></script>
+
+		<!-- <![endif]-->
+
+		<!--[if IE]>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<![endif]-->
+
+		<!--[if !IE]> -->
+
+		<script type="text/javascript">
+			window.jQuery || document.write("<script src='../static/assets/js/jquery-2.0.3.min.js'>"+"<"+"/script>");
+		</script>
+
+		<!-- <![endif]-->
+
+		<!--[if IE]>
+<script type="text/javascript">
+ window.jQuery || document.write("<script src='assets/js/jquery-1.10.2.min.js'>"+"<"+"/script>");
+</script>
+<![endif]-->
+
+		<script type="text/javascript">
+			if("ontouchend" in document) document.write("<script src='../static/assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
+		</script>
+		<script src="../static/assets/js/bootstrap.min.js"></script>
+		<script src="../static/assets/js/typeahead-bs2.min.js"></script>
+
+		<!-- page specific plugin scripts -->
+
+		<script src="../static/assets/js/date-time/bootstrap-datepicker.min.js"></script>
+		<script src="../static/assets/js/jqGrid/jquery.jqGrid.min.js"></script>
+		<script src="../static/assets/js/jqGrid/i18n/grid.locale-en.js"></script>
+
+		<!-- ace scripts -->
+
+		<script src="../static/assets/js/ace-elements.min.js"></script>
+		<script src="../static/assets/js/ace.min.js"></script>
+
+		<!-- inline scripts related to this page -->
+
+		<script type="text/javascript">
+
+
+			jQuery(function($) {
+
+
+				var grid_selector = "#grid-table";
+				var pager_selector = "#grid-pager";
+
+				jQuery(grid_selector).jqGrid({
+					//direction: "rtl",
+
+					url:"user/deptAll",
+					datatype: "json",
+
+					height: 250,
+					colNames:[' ','部门名称 ','部门电话', '备注'],
+					colModel:[
+
+						{name:'deptid',index:'deptid', width:60, sorttype:"int",hidden:true},
+						{name:'dname',index:'dname',width:90},
+						{name:'dPhone',index:'dPhone', width:150},
+						{name:'dmark',index:'dmark', width:70},
+
+					],
+
+					viewrecords : true,
+					rowNum:10,
+					rowList:[10,20,30],
+					pager : pager_selector,
+					altRows: true,
+					multiselect: true,
+			        multiboxonly: true,
+					loadComplete : function() {
+						var table = this;
+						setTimeout(function(){
+							updatePagerIcons(table);
+						}, 0);
+					},
+					caption: "部门列表",
+					autowidth: true
+
+				});
+
+
+				//查询
+                $("#btnSearch").click(function(){
+
+
+
+                    $(grid_selector).jqGrid("setGridParam", {
+                        postData: {
+                            "dname": $("#dname2").val(),
+                            "dPhone": $("#dPhone2").val()
+                        }
+                    }).trigger("reloadGrid");
+
+
+                });
+
+                $("#add").click(function () {
+					$('#myModal').modal("show");
+					
+				})
+
+				$("#edit").click(function () {
+					var rowId = $(grid_selector).jqGrid('getGridParam','selrow');
+					if(rowId==null||rowId==''){
+						alert("请选择一条数据")
+						return;
+					}else{
+
+						$('#editMode').modal("show");
+
+                        var rowId = $(grid_selector).jqGrid('getGridParam','selrow');
+
+                        var rowData = $(grid_selector).jqGrid('getRowData',rowId);
+                        var deptid= rowData.deptid;
+
+                        $("#dname").val(rowData.dname);
+                        $("#dPhone").val(rowData.dPhone);
+                        $("#mark").val(rowData.dmark);
+
+					}
+
+				})
+
+				$("#del").click(function () {
+					var rowId = $(grid_selector).jqGrid('getGridParam','selrow');
+					if(rowId==null||rowId==''){
+						alert("请选择一条数据")
+						return;
+					}else{
+
+
+                        var rowId = $(grid_selector).jqGrid('getGridParam','selrow');
+
+                        var rowData = $(grid_selector).jqGrid('getRowData',rowId);
+                        var deptid= rowData.deptid;
+                        $.ajax({
+                            url:"user/delDept",
+                            type:"post",
+                            data:{
+                                "deptid":deptid,
+
+                            },
+                            success:function (data) {
+                                $('#myModal').modal("hide");
+                                alert("删除成功！")
+                                $(grid_selector).jqGrid('clearGridData');// 清空数据
+                                $(grid_selector).trigger("reloadGrid");
+                            }
+
+
+                        })
+
+					}
+				})
+				//enable datepicker日期
+				function pickDate( cellvalue, options, cell ) {
+					setTimeout(function(){
+						$(cell) .find('input[type=text]')
+								.datepicker({format:'yyyy-mm-dd' , autoclose:true});
+					}, 0);
+				}
+				function updatePagerIcons(table) {
+					var replacement =
+					{
+						'ui-icon-seek-first' : 'icon-double-angle-left bigger-140',
+						'ui-icon-seek-prev' : 'icon-angle-left bigger-140',
+						'ui-icon-seek-next' : 'icon-angle-right bigger-140',
+						'ui-icon-seek-end' : 'icon-double-angle-right bigger-140'
+					};
+					$('.ui-pg-table:not(.navtable) > tbody > tr > .ui-pg-button > .ui-icon').each(function(){
+						var icon = $(this);
+						var $class = $.trim(icon.attr('class').replace('ui-icon', ''));
+
+						if($class in replacement) icon.attr('class', 'ui-icon '+replacement[$class]);
+					})
+				}
+
+
+
+
+				$("#save").click(function () {
+
+					var dname=$("#dname1").val();
+					var dPhone=$("#dPhone1").val();
+					var dmark=$("#mark1").val();
+
+					$.ajax({
+						url:"user/addDept",
+						type:"post",
+						data:{
+							"dname":dname,
+							"dPhone":dPhone,
+							"dmark":dmark
+						},
+						success:function (data) {
+							$('#myModal').modal("hide");
+                            $(grid_selector).jqGrid('clearGridData');// 清空数据
+                            $(grid_selector).trigger("reloadGrid");
+							alert("添加成功！")
+						}
+
+
+					})
+
+
+				})
+
+				$("#editsave").click(function () {
+
+					var rowId = $(grid_selector).jqGrid('getGridParam','selrow');
+
+					var rowData = $(grid_selector).jqGrid('getRowData',rowId);
+                    var deptid= rowData.deptid;
+
+                    var dname=$("#dname").val();
+                    var dPhone=$("#dPhone").val();
+                    var mark= $("#mark").val();
+
+
+                    $.ajax({
+                        url:"user/updateDept",
+                        type:"post",
+                        data:{
+                            "deptid":deptid,
+                            "dname":dname,
+                            "dPhone":dPhone,
+                            "dmark":mark
+                        },
+                        success:function (data) {
+                            $('#myModal').modal("hide");
+                            $(grid_selector).jqGrid('clearGridData');// 清空数据
+                            $(grid_selector).trigger("reloadGrid");
+                            alert("修改成功！")
+                            $('#editMode').modal("hide");
+                        }
+
+
+                    })
+
+
+
+
+				})
+
+
+			});
+		</script>
+</body>
+</html>
